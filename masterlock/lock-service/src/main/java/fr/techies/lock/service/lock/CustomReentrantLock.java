@@ -1,4 +1,4 @@
-package fr.techies.lock.service;
+package fr.techies.lock.service.lock;
 
 import java.util.Calendar;
 import java.util.concurrent.locks.Lock;

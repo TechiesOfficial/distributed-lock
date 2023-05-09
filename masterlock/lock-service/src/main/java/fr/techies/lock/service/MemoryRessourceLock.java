@@ -3,6 +3,7 @@ package fr.techies.lock.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.techies.lock.service.lock.CustomReentrantLock;
 import fr.techies.lock.service.register.Client;
 
 public class MemoryRessourceLock<Resource> {
