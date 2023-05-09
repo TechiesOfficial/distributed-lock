@@ -30,7 +30,10 @@ public class MemoryLockRegister<R extends Resource> {
 		//Register
 		if(this.customLockByClient.get(client) == null)
 			this.customLockByClient.put(client, new ArrayList<>());
-		this.customLockByClient.get(client).add(customLock);
+		//If a particular lock is not already associated to this client
+		if(!this.customLockByClient.get(client).contains(customLock))
+			this.customLockByClient.get(client).add(customLock);
+		
 		
 		// No one currently hold the lock.
 		if (customLock.getHolder() == null) {

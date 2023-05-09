@@ -1,8 +1,12 @@
 package fr.techies.lock.service.model;
 
 /**
- * Currently only a mark interface
+ * {@link Resource#equals(Object)} and {@link Resource#hashCode()} are present
+ * to remind subclasses to implement these.
  */
-public interface Resource  {
+public interface Resource {
 
+	boolean equals(Object obj);
+
+	int hashCode();
 }

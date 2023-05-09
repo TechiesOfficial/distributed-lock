@@ -11,4 +11,18 @@ public class StringRessource implements Resource{
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		StringRessource stringRessource = (StringRessource) obj;
+		
+		return this.name.equals(stringRessource.name);
+	}
+	
+	@Override
+	public int hashCode() {
+
+		return this.name.hashCode();
+	}
 }
