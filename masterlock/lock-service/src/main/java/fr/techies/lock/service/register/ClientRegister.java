@@ -1,6 +1,8 @@
 package fr.techies.lock.service.register;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,5 +20,10 @@ public class ClientRegister {
 		this.clientsByUUID.putIfAbsent(uuid, client);
 		
 		return client;
+	}
+	
+	public Collection<Client> getAll(){
+		
+		return this.clientsByUUID.values();
 	}
 }

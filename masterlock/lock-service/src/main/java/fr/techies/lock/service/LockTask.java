@@ -2,17 +2,19 @@ package fr.techies.lock.service;
 
 import java.util.concurrent.Callable;
 
+import fr.techies.lock.service.model.Resource;
 import fr.techies.lock.service.register.Client;
+import fr.techies.lock.service.register.MemoryLockRegister;
 
-public class LockTask<Resource> implements Callable<Boolean>{
+public class LockTask<R extends Resource> implements Callable<Boolean>{
 
-	private MemoryRessourceLock<Resource> memoryRessourceLock;
+	private MemoryLockRegister<R> memoryRessourceLock;
 
-	private Resource resource;
+	private R resource;
 	
 	private Client client;
 	
-	public LockTask(MemoryRessourceLock<Resource> memoryRessourceLock, Client client, Resource resource) {
+	public LockTask(MemoryLockRegister<R> memoryRessourceLock, Client client, R resource) {
 		this.resource = resource;
 		this.client = client;
 		this.memoryRessourceLock = memoryRessourceLock;

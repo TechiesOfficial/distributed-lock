@@ -1,19 +1,20 @@
 package fr.techies.lock.service;
 
-import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import fr.techies.lock.service.model.Resource;
 import fr.techies.lock.service.register.Client;
+import fr.techies.lock.service.register.MemoryLockRegister;
 
-public class UnlockTask<Resource> implements Callable<Boolean> {
+public class UnlockTask<R extends Resource> implements Callable<Boolean> {
 
-	private MemoryRessourceLock<Resource> memoryRessourceLock;
+	private MemoryLockRegister<R> memoryRessourceLock;
 
-	private Resource resource;
+	private R resource;
 	
 	private Client client;
 
-	public UnlockTask(MemoryRessourceLock<Resource> memoryRessourceLock, Client client, Resource resource) {
+	public UnlockTask(MemoryLockRegister<R> memoryRessourceLock, Client client, R resource) {
 
 		this.memoryRessourceLock = memoryRessourceLock;
 		this.resource = resource;

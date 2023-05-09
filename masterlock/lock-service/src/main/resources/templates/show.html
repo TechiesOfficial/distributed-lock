@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Clients</title>
+<link th:href="@{/css/table.css}" rel="stylesheet" />
+</head>
+<body>
+	<h1>Client</h1>
+	<h1 th:utext="${client.uuid}"></h1>
+	<table class="styled-table">
+		<thead>
+			<tr>
+				<th>Lock currently held</th>
+				<th>Associated ressource</th>
+				<th>Date fisrt hold</th>
+				<th>Hold X times</th>
+				<th>Date last hold</th>
+			</tr>
+		</thead>
+		<th:block>
+			<tr th:each="lock : ${locksHeld}">
+				<td th:utext="${lock}"></td>
+				<td th:utext="${lock.resource.name}"></td>
+				<td th:utext="${lock.fisrtHold}"></td>
+				<td th:utext="${lock.howManyTimesHold}"></td>
+				<td th:utext="${lock.lastHold}"></td>
+			</tr>
+	</table>
+</body>
+</html>

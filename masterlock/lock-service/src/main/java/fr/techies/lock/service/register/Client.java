@@ -11,6 +11,10 @@ public class Client {
 		this.uuid = uuid;
 	}
 	
+	public UUID getUuid() {
+		return uuid;
+	}
+
 	/** 
 	 * Do not change! Used to identify uniquely a client.
 	 */
@@ -30,4 +34,5 @@ public class Client {
 
 		return uuid.hashCode();
 	}
+	
 }

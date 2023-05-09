@@ -1,4 +1,4 @@
-package fr.techies.lock.service.lock;
+package fr.techies.lock.service.model;
 
 import java.util.Calendar;
 import java.util.concurrent.locks.Lock;
@@ -22,7 +22,7 @@ import fr.techies.lock.service.register.Client;
  * </p>
  * 
  */
-public class CustomReentrantLock {
+public class CustomReentrantLock<R extends Resource> {
 
 	private Lock lock = new ReentrantLock();
 
@@ -34,8 +34,11 @@ public class CustomReentrantLock {
 
 	private long lastHold = -1;
 
-	public CustomReentrantLock() {
+	private R resource = null;
+	
+	public CustomReentrantLock(R resource) {
 
+		this.resource = resource;
 	}
 
 	public Client getHolder() {
@@ -81,5 +84,9 @@ public class CustomReentrantLock {
 
 	public long getLastHold() {
 		return lastHold;
+	}
+
+	public R getResource() {
+		return resource;
 	}
 }

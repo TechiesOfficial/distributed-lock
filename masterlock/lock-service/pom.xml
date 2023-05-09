@@ -53,6 +53,7 @@
 					<include>application.properties</include>
 					<include>schema.sql</include>
 					<include>templates/*</include>
+					<include>static/**</include>
 				</includes>
 			</resource>
 		</resources>

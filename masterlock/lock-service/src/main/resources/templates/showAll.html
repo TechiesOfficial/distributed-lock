@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Clients</title>
+<link th:href="@{/css/table.css}" rel="stylesheet" />
+</head>
+<body>
+	<h1>Clients</h1>
+	<table class="styled-table">
+		<thead>
+			<tr>
+				<th>Client UUID</th>
+				<th>test</th>
+			</tr>
+		</thead>
+		<th:block>
+			<tr th:each="client : ${clients}">
+
+				<td><a th:href="@{'/client/show/' + ${client.uuid}}"
+					th:utext="${client.uuid}"></a></td>
+			</tr>
+	</table>
+</body>
+</html>
