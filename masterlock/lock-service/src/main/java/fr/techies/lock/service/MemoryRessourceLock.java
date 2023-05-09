@@ -4,30 +4,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import fr.techies.lock.service.register.Client;
+
 public class MemoryRessourceLock<Resource> {
 
-	private Map<Resource, UUIDLock> lockByRessource = new HashMap<>();
+	private Map<Resource, CustomLock> lockByRessource = new HashMap<>();
 
-	public boolean tryLock(UUID uuid, Resource resource) {
+	public boolean tryLock(Client client, Resource resource) {
 
-		UUIDLock uuidLock = null;
+		CustomLock customLock = null;
 		boolean result = false;
 
 		if (!lockByRessource.containsKey(resource))
-			lockByRessource.put(resource, new UUIDLock());
+			lockByRessource.put(resource, new CustomLock());
 
-		uuidLock = this.lockByRessource.get(resource);
+		customLock = this.lockByRessource.get(resource);
 
 		// No one currently hold the lock.
-		if (uuidLock.getHolder() == null) {
+		if (customLock.getHolder() == null) {
 			// Lock the lock.
-			result = uuidLock.getLock().tryLock();
+			result = customLock.getLock().tryLock();
 			// Set the holder.
-			uuidLock.setHolder(uuid);
+			customLock.setHolder(client);
 		} 
-		//Lock is currently held by the current uuid
-		else if (uuidLock.getHolder().equals(uuid)) {
-			uuidLock.setHolder(uuid);
+		//Lock is currently held by the current client
+		else if (customLock.getHolder().equals(client)) {
+			customLock.setHolder(client);
 			result = true;
 		}
 		//Lock is currently held by another uuid.
@@ -38,14 +40,14 @@ public class MemoryRessourceLock<Resource> {
 		return result;
 	}
 
-	public Boolean unlock(UUID uuid, Resource resource) {
+	public Boolean unlock(Client client, Resource resource) {
 
-		UUIDLock uuidLock = null;
+		CustomLock uuidLock = null;
 
 		// If an unlock has been asked before lock.
 		// Should not happen, it is to prevent bad behaviour.
 		if (!lockByRessource.containsKey(resource)) {
-			lockByRessource.put(resource, new UUIDLock());
+			lockByRessource.put(resource, new CustomLock());
 			return false;
 		}
 
@@ -53,7 +55,7 @@ public class MemoryRessourceLock<Resource> {
 			uuidLock = this.lockByRessource.get(resource);
 
 			//Lock is not held by the current uuid. Can not unlock.
-			if (!uuid.equals(uuidLock.getHolder()))
+			if (!client.equals(uuidLock.getHolder()))
 				return false;
 
 			// Unlock the lock.

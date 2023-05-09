@@ -6,6 +6,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.springframework.stereotype.Component;
+
+import fr.techies.lock.service.register.Client;
+
+@Component
 public class LockUnlockThreadPool<Resource> {
 
 	// We create a TP of 1 thread in order to be sure the thread used to lock/unlock
@@ -19,11 +24,11 @@ public class LockUnlockThreadPool<Resource> {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Boolean tryLock(UUID uuid, Resource resource) {
+	public Boolean tryLock(Client client, Resource resource) {
 
 		Future<Boolean> future = null;
 
-		future = this.executor.submit(new LockTask<Resource>(this.memoryRessourceLock, uuid, resource));
+		future = this.executor.submit(new LockTask<Resource>(this.memoryRessourceLock, client, resource));
 
 		try {
 			return future.get();
@@ -34,11 +39,11 @@ public class LockUnlockThreadPool<Resource> {
 		return null;
 	}
 
-	public Boolean unlock(UUID uuid, Resource resource) {
+	public Boolean unlock(Client client, Resource resource) {
 
 		Future<Boolean> future = null;
 
-		future = this.executor.submit(new UnlockTask<Resource>(this.memoryRessourceLock, uuid, resource));
+		future = this.executor.submit(new UnlockTask<Resource>(this.memoryRessourceLock, client, resource));
 
 		try {
 			return future.get();

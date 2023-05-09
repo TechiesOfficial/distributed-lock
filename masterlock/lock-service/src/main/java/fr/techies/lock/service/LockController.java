@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,35 +13,42 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import fr.techies.lock.service.register.Client;
+import fr.techies.lock.service.register.ClientRegister;
 import fr.techies.lock.service.response.LockedReponse;
 import fr.techies.lock.service.response.UnlockedReponse;
 
 @Controller
 public class LockController {
 
-	private LockUnlockThreadPool<String> lockUnlockThreadPool = new LockUnlockThreadPool<>();
-	
+	@Autowired
+	private ClientRegister clientRegister;
+
+	@Autowired
+	private LockUnlockThreadPool<String> lockUnlockThreadPool;
+
 	@GetMapping("lock/{serviceUUID}/{resource}")
-	public ResponseEntity<?> lock(HttpServletRequest request, @PathVariable String serviceUUID, @PathVariable String resource) {
+	public ResponseEntity<?> lock(HttpServletRequest request, @PathVariable String serviceUUID,
+			@PathVariable String resource) {
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		ResponseEntity<?> responseEntity = null;
 		UUID uuid = UUID.fromString(serviceUUID);
 		boolean result = false;
-		
-		System.out.println(request.getRemoteAddr());
-		System.out.println(request.getRemoteHost());
-		System.out.println(request.getRemotePort());
-		
-		result = this.lockUnlockThreadPool.tryLock(uuid, resource);
-		
+		Client client = null;
+
+		// Registering client
+		client = clientRegister.register(uuid);
+
+		result = this.lockUnlockThreadPool.tryLock(client, resource);
+
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		responseEntity = new ResponseEntity<LockedReponse>(new LockedReponse(uuid, resource, result), httpHeaders,
 				HttpStatus.OK);
 
 		return responseEntity;
 	}
-	
+
 	@GetMapping("unlock/{serviceUUID}/{resource}")
 	public ResponseEntity<?> unlock(@PathVariable String serviceUUID, @PathVariable String resource) {
 
@@ -48,14 +56,18 @@ public class LockController {
 		ResponseEntity<?> responseEntity = null;
 		UUID uuid = UUID.fromString(serviceUUID);
 		boolean result = false;
-		
-		result = this.lockUnlockThreadPool.unlock(uuid, resource);
-		
+		Client client = null;
+
+		// Registering client
+		client = clientRegister.register(uuid);
+
+		result = this.lockUnlockThreadPool.unlock(client, resource);
+
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		responseEntity = new ResponseEntity<UnlockedReponse>(new UnlockedReponse(uuid, resource, result), httpHeaders,
 				HttpStatus.OK);
 
 		return responseEntity;
 	}
-	
+
 }

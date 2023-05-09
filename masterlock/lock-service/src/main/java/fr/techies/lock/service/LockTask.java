@@ -1,7 +1,8 @@
 package fr.techies.lock.service;
 
-import java.util.UUID;
 import java.util.concurrent.Callable;
+
+import fr.techies.lock.service.register.Client;
 
 public class LockTask<Resource> implements Callable<Boolean>{
 
@@ -9,17 +10,17 @@ public class LockTask<Resource> implements Callable<Boolean>{
 
 	private Resource resource;
 	
-	private UUID uuid;
+	private Client client;
 	
-	public LockTask(MemoryRessourceLock<Resource> memoryRessourceLock, UUID uuid, Resource resource) {
+	public LockTask(MemoryRessourceLock<Resource> memoryRessourceLock, Client client, Resource resource) {
 		this.resource = resource;
-		this.uuid = uuid;
+		this.client = client;
 		this.memoryRessourceLock = memoryRessourceLock;
 	}
 
 	@Override
 	public Boolean call() throws Exception {
 
-		return this.memoryRessourceLock.tryLock(this.uuid, this.resource);
+		return this.memoryRessourceLock.tryLock(this.client, this.resource);
 	}
 }
