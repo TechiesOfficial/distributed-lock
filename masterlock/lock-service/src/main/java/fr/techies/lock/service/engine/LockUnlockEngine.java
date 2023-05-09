@@ -1,4 +1,4 @@
-package fr.techies.lock.service;
+package fr.techies.lock.service.engine;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +13,7 @@ import fr.techies.lock.service.register.Client;
 import fr.techies.lock.service.register.MemoryLockRegister;
 
 @Component
-public class LockUnlockThreadPool<R extends Resource> {
+public class LockUnlockEngine<R extends Resource> {
 
 	@Autowired
 	private MemoryLockRegister<R> memoryRessourceLock = new MemoryLockRegister<>();
@@ -22,10 +22,6 @@ public class LockUnlockThreadPool<R extends Resource> {
 	// resources
 	// is effectively holding the monitor
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
-
-	public LockUnlockThreadPool() {
-		// TODO Auto-generated constructor stub
-	}
 
 	public Boolean tryLock(Client client, R resource) {
 

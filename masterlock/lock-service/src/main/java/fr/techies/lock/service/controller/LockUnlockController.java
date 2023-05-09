@@ -1,4 +1,4 @@
-package fr.techies.lock.service;
+package fr.techies.lock.service.controller;
 
 import java.util.UUID;
 
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import fr.techies.lock.service.engine.LockUnlockEngine;
 import fr.techies.lock.service.model.Resource;
 import fr.techies.lock.service.model.StringRessource;
 import fr.techies.lock.service.register.Client;
@@ -27,7 +28,7 @@ public class LockUnlockController {
 	private ClientRegister clientRegister;
 
 	@Autowired
-	private LockUnlockThreadPool<Resource> lockUnlockThreadPool;
+	private LockUnlockEngine<Resource> lockUnlockEngine;
 
 	@GetMapping("lock/{serviceUUID}/{resource}")
 	public ResponseEntity<?> lock(HttpServletRequest request, @PathVariable String serviceUUID,
@@ -43,7 +44,7 @@ public class LockUnlockController {
 		// Registering client
 		client = clientRegister.register(uuid);
 
-		result = this.lockUnlockThreadPool.tryLock(client, r);
+		result = this.lockUnlockEngine.tryLock(client, r);
 
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		responseEntity = new ResponseEntity<LockedReponse>(new LockedReponse(uuid, resource, result), httpHeaders,
@@ -65,7 +66,7 @@ public class LockUnlockController {
 		// Registering client
 		client = clientRegister.register(uuid);
 
-		result = this.lockUnlockThreadPool.unlock(client, r);
+		result = this.lockUnlockEngine.unlock(client, r);
 
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		responseEntity = new ResponseEntity<UnlockedReponse>(new UnlockedReponse(uuid, resource, result), httpHeaders,
@@ -73,5 +74,4 @@ public class LockUnlockController {
 
 		return responseEntity;
 	}
-
 }

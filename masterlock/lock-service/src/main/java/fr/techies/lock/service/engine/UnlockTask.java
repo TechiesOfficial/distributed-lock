@@ -1,4 +1,4 @@
-package fr.techies.lock.service;
+package fr.techies.lock.service.engine;
 
 import java.util.concurrent.Callable;
 
@@ -6,23 +6,24 @@ import fr.techies.lock.service.model.Resource;
 import fr.techies.lock.service.register.Client;
 import fr.techies.lock.service.register.MemoryLockRegister;
 
-public class LockTask<R extends Resource> implements Callable<Boolean>{
+public class UnlockTask<R extends Resource> implements Callable<Boolean> {
 
 	private MemoryLockRegister<R> memoryRessourceLock;
 
 	private R resource;
 	
 	private Client client;
-	
-	public LockTask(MemoryLockRegister<R> memoryRessourceLock, Client client, R resource) {
+
+	public UnlockTask(MemoryLockRegister<R> memoryRessourceLock, Client client, R resource) {
+
+		this.memoryRessourceLock = memoryRessourceLock;
 		this.resource = resource;
 		this.client = client;
-		this.memoryRessourceLock = memoryRessourceLock;
 	}
 
 	@Override
 	public Boolean call() throws Exception {
-
-		return this.memoryRessourceLock.tryLock(this.client, this.resource);
+		// TODO Auto-generated method stub
+		return this.memoryRessourceLock.unlock(this.client, this.resource);
 	}
 }
